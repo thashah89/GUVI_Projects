@@ -9,11 +9,11 @@ from selenium.common.exceptions import TimeoutException
 import time
 import pandas as pd
 from sqlalchemy import create_engine
-import mysql.connector
+import pymysql
 
 # Creating a connection to mysql to import data into database
 try:
-    mydb = mysql.connector.connect(
+    mydb = pymysql.connect(
         host = '127.0.0.1',
         user = 'root',
         password = 'ShahulSqL2024'
@@ -24,9 +24,9 @@ try:
     mydb.commit()
     print("Database created successfully")
     cursor.execute("use redbus")
-    cursor.execute("drop table if exists bus_routes")
+    cursor.execute("Truncate table if exists bus_routes")
 
-except mysql.connector.Error as e:
+except pymysql.Error as e:
     print(f"An error occured {e}")
 
 host = '127.0.0.1'
@@ -42,7 +42,7 @@ driver = webdriver.Chrome()
 # initiate action chains
 actions = ActionChains(driver)
 
-
+# Declare the state and the links to extract data
 transport_state = ['Andhra Pradesh','Kerala','Telangana','Karnataka','Rajasthan','South Bengal','Haryana','Assam','Uttar Pradesh','West Bengal','Chandigarh','Punjab']
 transport_info = [
     'https://www.redbus.in/online-booking/apsrtc/?utm_source=rtchometile',
@@ -69,7 +69,7 @@ def is_at_end_of_page(driver):
     # Check if we've reached the bottom of the page
     return scroll_position + viewport_height >= page_height
 
-
+# looping the state and the link to open each pages for extraction
 for j,k in zip(transport_info,transport_state):
     # opening web page
     driver.get(j);
@@ -103,14 +103,15 @@ for j,k in zip(transport_info,transport_state):
         # looping through the selenium object to extract data into the list
         for i in temp_route:
             rte_name.append(i.text)
-            rte_link.append(i.get_dom_attribute('href'))
+            rte_link.append(i.get_attribute('href'))
 
     # looping through the extracted 
     for r,s in zip(rte_name,rte_link):
-        
+        print(s)
         driver.get(s);
         time.sleep(10)
 
+        # To handle page issue by 12 AM where the date stuck with previous day
         check = len(driver.find_elements(By.XPATH,"//h3[text()='Oops! No buses found.']"))
 
         if check > 0:
@@ -123,6 +124,7 @@ for j,k in zip(transport_info,transport_state):
 
         clicks = len(no_of_clicks)
 
+        # performing view buses clicks on the webpages depend on the number of buttons found
         if clicks <= 1:
             for t in no_of_clicks:
                 t.click()
@@ -138,34 +140,41 @@ for j,k in zip(transport_info,transport_state):
             # Scroll down by sending PAGE_DOWN or by using JavaScript
             driver.find_element('tag name', 'body').send_keys(Keys.PAGE_DOWN)
 
+        # identifying the list of bus containers available in the webpage
         list_items = driver.find_elements(By.XPATH, "//*[@class='row-sec clearfix']")
 
+        # looping through the identified containers and extracting ID to find each information and append it
         for a in list_items:
             state.append(k)
             route_name.append(r)
             route_link.append(s)
-            bus_name.append(driver.find_element(By.XPATH, "//*[@id='" + a.get_dom_attribute('id') + "']/div/div[1]/div[1]/div[1]/div[1]").text)
-            bus_type.append(driver.find_element(By.XPATH, "//*[@id='" + a.get_dom_attribute('id') + "']/div/div[1]/div[1]/div[1]/div[2]").text)
-            departing_time.append(driver.find_element(By.XPATH,"//*[@id='" + a.get_dom_attribute('id') + "']/div/div[1]/div[1]/div[2]/div[1]").text)
-            duration.append(driver.find_element(By.XPATH,"//*[@id='" + a.get_dom_attribute('id') + "']/div/div[1]/div[1]/div[3]/div").text)
-            reaching_time.append(driver.find_element(By.XPATH,"//*[@id='" + a.get_dom_attribute('id') + "']/div/div[1]/div[1]/div[4]/div[1]").text)
+            bus_name.append(driver.find_element(By.XPATH, "//*[@id='" + a.get_attribute('id') + "']/div/div[1]/div[1]/div[1]/div[1]").text)
+            bus_type.append(driver.find_element(By.XPATH, "//*[@id='" + a.get_attribute('id') + "']/div/div[1]/div[1]/div[1]/div[2]").text)
+            departing_time.append(driver.find_element(By.XPATH,"//*[@id='" + a.get_attribute('id') + "']/div/div[1]/div[1]/div[2]/div[1]").text)
+            duration.append(driver.find_element(By.XPATH,"//*[@id='" + a.get_attribute('id') + "']/div/div[1]/div[1]/div[3]/div").text)
+            reaching_time.append(driver.find_element(By.XPATH,"//*[@id='" + a.get_attribute('id') + "']/div/div[1]/div[1]/div[4]/div[1]").text)
             try:
                 element = WebDriverWait(driver, 3).until(
-                    EC.presence_of_element_located((By.XPATH, "//*[@id='" + a.get_dom_attribute('id') + "']/div/div[1]/div[1]/div[5]/div[1]/div/span"))
+                    EC.presence_of_element_located((By.XPATH, "//*[@id='" + a.get_attribute('id') + "']/div/div[1]/div[1]/div[5]/div[1]/div/span"))
                 )
                 star_rating.append(element.text)
             except TimeoutException:
                 star_rating.append(0)
-            price.append(driver.find_element(By.XPATH,"//*[@id='" + a.get_dom_attribute('id') + "']/div/div[1]/div[1]/div[6]/div/div/span").text)
-            seat_availability.append((driver.find_element(By.XPATH,"//*[@id='" + a.get_dom_attribute('id') + "']/div/div[1]/div[1]/div[7]/div").text).split(' ')[0])
-        
+            price.append(driver.find_element(By.XPATH,"//*[@id='" + a.get_attribute('id') + "']/div/div[1]/div[1]/div[6]/div/div/span").text)
+            seat_availability.append((driver.find_element(By.XPATH,"//*[@id='" + a.get_attribute('id') + "']/div/div[1]/div[1]/div[7]/div").text).split(' ')[0])
+    
+    # creating the columns required to store the values
     col_name = ['state','bus_route_name', 'bus_route_link', 'bus_name', 'bus_type', 'departing_time', 'duration', 'reaching_time', 'star_rating', 'price', 'seat_availability']
+    
+    # creating dataframe using the lists along with the column name
     df = pd.DataFrame(list(zip(state,route_name,route_link,bus_name,bus_type,departing_time,duration,reaching_time,star_rating,price,seat_availability)),columns=col_name)
 
+    # exporting the dataframe into sql and also saving a version as csv in the same folder as backup
     df.to_sql('bus_routes',engine,if_exists='append',index=False)
     df.to_csv(f"{k}.csv",index=False)
     print(f"{k} is successfully extracted")
 
+# once the pages are completed. We set the column data type as required in the sql
 cursor.execute('Alter table bus_routes add column id int auto_increment primary key')
 cursor.execute('Alter table bus_routes modify column departing_time time')
 cursor.execute('Alter table bus_routes modify column reaching_time time')
