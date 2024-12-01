@@ -163,13 +163,13 @@ def InsightTracker():
         if star_num:
             star_num = int(star_num.group())
 
-        price_filter = int(math.ceil(data['price'].max()/10)*10)
-        price_options = [i for i in range(0,price_filter+1,100)]
-        price_filter = st.sidebar.select_slider("Filter by price:",options=price_options,value=(0,price_filter))
+        price = int(math.ceil(data['price'].max()/10)*10)
+        price_options = [i for i in range(0,price+1,100)]
+        price_filter = st.sidebar.select_slider("Filter by price:",options=price_options,value=(0,price))
 
-        seat_available = int(math.ceil(data['seat_availability'].max()/10)*10)
-        seat_options = [i for i in range(0,seat_available+1)]
-        seat_filter = st.sidebar.select_slider("Filter by seat availability:",options=seat_options,value=(0,seat_available))
+        seat = int(math.ceil(data['seat_availability'].max()/10)*10)
+        seat_options = [i for i in range(0,seat+1)]
+        seat_filter = st.sidebar.select_slider("Filter by seat availability:",options=seat_options,value=(0,seat))
 
         try:
             if depart_time == 'All':
