@@ -9,7 +9,7 @@ from streamlit_option_menu import option_menu
 st.set_page_config(page_title="Red Bus Insight Tracker", layout="wide")
 
 def home():
-    st.markdown("<span style='font-size: 50px; color: red; weight: bold;'>**Welcome to Red Bus Insight Tracker**</span>", unsafe_allow_html=True)
+    st.markdown("<span style='font-size: 50px; color: red; weight: bold;'>**Welcome to Redbus Data Insight Tracker with Selenium & Dynamic Filtering using Streamlit**</span>", unsafe_allow_html=True)
     st.image("C:/Users/Shahul_Desktop/OneDrive/Desktop/GUVI_Projects/Redbus Cover.webp")
 
 def about():
