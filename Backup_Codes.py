@@ -27,12 +27,12 @@ pw = 'ShahulSqL2024'
 
 engine = create_engine(f"mysql+pymysql://{user}:{pw}@{host}/{db}")
 
-file_list = ['C:/Users/Shahul_Desktop/hello/Data Extracted/Andhra Pradesh.csv','C:/Users/Shahul_Desktop/hello/Data Extracted/Assam.csv',
-             'C:/Users/Shahul_Desktop/hello/Data Extracted/Chandigarh.csv','C:/Users/Shahul_Desktop/hello/Data Extracted/Haryana.csv',
-             'C:/Users/Shahul_Desktop/hello/Data Extracted/Karnataka.csv','C:/Users/Shahul_Desktop/hello/Data Extracted/Kerala.csv',
-             'C:/Users/Shahul_Desktop/hello/Data Extracted/Punjab.csv','C:/Users/Shahul_Desktop/hello/Data Extracted/Rajasthan.csv',
-             'C:/Users/Shahul_Desktop/hello/Data Extracted/South Bengal.csv','C:/Users/Shahul_Desktop/hello/Data Extracted/Telangana.csv',
-             'C:/Users/Shahul_Desktop/hello/Data Extracted/Uttar Pradesh.csv','C:/Users/Shahul_Desktop/hello/Data Extracted/West Bengal.csv'
+file_list = ['C:\Users\Shahul_Desktop\OneDrive\Desktop\GUVI_Projects\CSV Backup\Andhra Pradesh.csv','C:\Users\Shahul_Desktop\OneDrive\Desktop\GUVI_Projects\CSV Backup\Assam.csv',
+             'C:\Users\Shahul_Desktop\OneDrive\Desktop\GUVI_Projects\CSV Backup\Chandigarh.csv','C:\Users\Shahul_Desktop\OneDrive\Desktop\GUVI_Projects\CSV Backup\Haryana.csv',
+             'C:\Users\Shahul_Desktop\OneDrive\Desktop\GUVI_Projects\CSV Backup\Karnataka.csv','C:\Users\Shahul_Desktop\OneDrive\Desktop\GUVI_Projects\CSV Backup\Kerala.csv',
+             'C:\Users\Shahul_Desktop\OneDrive\Desktop\GUVI_Projects\CSV Backup\Punjab.csv','C:\Users\Shahul_Desktop\OneDrive\Desktop\GUVI_Projects\CSV Backup\Rajasthan.csv',
+             'C:\Users\Shahul_Desktop\OneDrive\Desktop\GUVI_Projects\CSV Backup\South Bengal.csv','C:\Users\Shahul_Desktop\OneDrive\Desktop\GUVI_Projects\CSV Backup\Telangana.csv',
+             'C:\Users\Shahul_Desktop\OneDrive\Desktop\GUVI_Projects\CSV Backup\Uttar Pradesh.csv','C:\Users\Shahul_Desktop\OneDrive\Desktop\GUVI_Projects\CSV Backup\West Bengal.csv'
 ]
 
 for i in file_list:
